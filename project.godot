@@ -74,6 +74,10 @@ GameManager="*res://scripts/autoload/game_manager.gd"
 InventoryManager="*res://scripts/autoload/inventory_manager.gd"
 WeatherSystem="*res://scripts/autoload/weather_system.gd"
 CraftingSystem="*res://scripts/autoload/crafting_system.gd"
+AudioManager="*res://scripts/autoload/audio_manager.gd"
+PerformanceMonitor="*res://scripts/optimization/performance_monitor.gd"
+ParticleManager="*res://scripts/effects/particle_manager.gd"
+TweenHelper="*res://scripts/effects/tween_helper.gd"
 
 [layer_names]
 
