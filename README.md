@@ -118,13 +118,35 @@ Mỗi mùa kéo dài **28 ngày**.
 
 ## 🚀 Hướng Dẫn Cài Đặt
 
-### Chơi Game
+### 🌐 Chơi Trên Web Browser (Khuyến Nghị!)
+
+**Game có thể chạy ngay trên trình duyệt web!** Không cần cài đặt gì!
+
+#### Option 1: Chơi Online
+- 🔗 Truy cập link game (sau khi deploy)
+- ✅ Click và chơi ngay!
+
+#### Option 2: Chạy Local
+1. **Export game từ Godot** (xem file `EXPORT_TO_WEB.md`)
+2. **Start web server** trong folder `web/`:
+   ```bash
+   python -m http.server 8000
+   ```
+3. **Mở browser**: `http://localhost:8000`
+
+📖 **Hướng dẫn chi tiết:** Xem file `EXPORT_TO_WEB.md`
+
+---
+
+### 💻 Chơi Game Desktop
 
 1. Download bản release mới nhất
 2. Giải nén file
 3. Chạy file thực thi `FarmLife.exe` (Windows) hoặc `FarmLife` (Linux/Mac)
 
-### Phát Triển
+---
+
+### 🛠️ Phát Triển
 
 1. Clone repository:
 ```bash
@@ -138,6 +160,8 @@ godot project.godot
 ```
 
 3. Nhấn F5 để chạy game
+
+📖 **Setup chi tiết:** Xem file `HUONG_DAN_CHOI.md`
 
 ## 📁 Cấu Trúc Project
 

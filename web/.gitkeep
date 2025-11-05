@@ -1,0 +1,8 @@
+# This folder will contain exported game files
+# After exporting from Godot, you'll have:
+# - index.html
+# - index.pck
+# - index.wasm
+# - index.js
+# - index.audio.worklet.js
+# - index.icon.png

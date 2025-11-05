@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Farm Life - Game nông trại 3D low-poly dễ thương, thư giãn">
+    <meta name="keywords" content="farm game, nông trại, farming simulator, game online">
+    <title>🌾 Farm Life - Low Poly Farm Game</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .game-container {
+            position: relative;
+            width: 100%;
+            background: #000;
+        }
+
+        #canvas-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            overflow: hidden;
+        }
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            image-rendering: auto;
+            image-rendering: crisp-edges;
+            image-rendering: pixelated;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            z-index: 10;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 20px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .controls {
+            background: #f8f9fa;
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .control-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .control-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .key {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-right: 15px;
+            min-width: 40px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .description {
+            flex: 1;
+            color: #555;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .status {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px;
+            text-align: center;
+        }
+
+        .status.success {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .fullscreen-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+            z-index: 20;
+            transition: all 0.3s;
+        }
+
+        .fullscreen-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .controls {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .emoji {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌾 Farm Life - Low Poly 🐔</h1>
+            <p>Game nông trại 3D dễ thương, thư giãn và vui nhộn!</p>
+        </header>
+
+        <div class="status">
+            <strong>ℹ️ Lưu ý:</strong> Game cần được export từ Godot Editor trước. Xem hướng dẫn bên dưới!
+        </div>
+
+        <div class="game-container">
+            <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
+            <div id="canvas-container">
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Đang tải game...</p>
+                    <p><small>Lần đầu có thể mất 10-30 giây</small></p>
+                </div>
+                <canvas id="canvas">
+                    HTML5 canvas không được hỗ trợ trên trình duyệt này.
+                </canvas>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-section">
+                <h3><span class="emoji">🎮</span> Điều khiển di chuyển</h3>
+                <div class="control-item">
+                    <span class="key">W</span>
+                    <span class="description">Di chuyển lên</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">S</span>
+                    <span class="description">Di chuyển xuống</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">A</span>
+                    <span class="description">Di chuyển trái</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">D</span>
+                    <span class="description">Di chuyển phải</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">↑↓←→</span>
+                    <span class="description">Phím mũi tên</span>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3><span class="emoji">🔧</span> Công cụ & Tương tác</h3>
+                <div class="control-item">
+                    <span class="key">E</span>
+                    <span class="description">Tương tác</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">1</span>
+                    <span class="description">Chọn Cuốc (Cày đất)</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">2</span>
+                    <span class="description">Chọn Bình tưới</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">3</span>
+                    <span class="description">Chọn Rìu</span>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3><span class="emoji">📋</span> Menu & UI</h3>
+                <div class="control-item">
+                    <span class="key">I</span>
+                    <span class="description">Mở/Đóng Kho đồ</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">B</span>
+                    <span class="description">Mở/Đóng Cửa hàng</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">C</span>
+                    <span class="description">Menu Xây dựng</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">F11</span>
+                    <span class="description">Toàn màn hình</span>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3><span class="emoji">🌱</span> Cách chơi nhanh</h3>
+                <div class="control-item">
+                    <span class="key">1️⃣</span>
+                    <span class="description">Nhấn <strong>1</strong> → Cày đất (E)</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">2️⃣</span>
+                    <span class="description">Đứng trên đất → Trồng hạt (E)</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">3️⃣</span>
+                    <span class="description">Nhấn <strong>2</strong> → Tưới nước (E)</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">4️⃣</span>
+                    <span class="description">Đợi cây chín → Thu hoạch (E)</span>
+                </div>
+                <div class="control-item">
+                    <span class="key">5️⃣</span>
+                    <span class="description">Nhấn <strong>B</strong> → Bán sản phẩm</span>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>🌾 Farm Life - Low Poly</strong></p>
+            <p>Phát triển với ❤️ sử dụng Godot Engine 4.2</p>
+            <p><small>© 2024 - Game nông trại thư giãn</small></p>
+        </footer>
+    </div>
+
+    <script>
+        // Godot Engine loader script will be injected here after export
+        // This is a placeholder HTML - the actual game files need to be exported from Godot
+
+        let canvas = document.getElementById('canvas');
+        let loadingDiv = document.getElementById('loading');
+
+        // Function to toggle fullscreen
+        function toggleFullscreen() {
+            let container = document.getElementById('canvas-container');
+            if (!document.fullscreenElement) {
+                container.requestFullscreen().catch(err => {
+                    console.log('Fullscreen error:', err);
+                });
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Simulate loading (will be replaced by actual Godot loader)
+        window.addEventListener('load', function() {
+            // Check if Godot engine files exist
+            setTimeout(function() {
+                // This will be replaced by actual Godot engine code after export
+                console.log('Placeholder HTML loaded. Export game from Godot to play.');
+            }, 1000);
+        });
+
+        // Handle canvas resize
+        window.addEventListener('resize', function() {
+            // Canvas will auto-resize with CSS
+        });
+
+        // Keyboard focus on canvas
+        canvas.addEventListener('click', function() {
+            canvas.focus();
+        });
+    </script>
+</body>
+</html>

@@ -2,7 +2,6 @@
 .godot/
 .import/
 export.cfg
-export_presets.cfg
 
 # Imported translations (automatically generated from CSV files)
 *.translation
@@ -19,3 +18,16 @@ mono_crash.*.json
 *~
 .vscode/
 .idea/
+
+# Exported game files (except the HTML wrapper)
+web/*.pck
+web/*.wasm
+web/*.js
+web/*.png
+web/*.worker.js
+web/*.audio.worklet.js
+
+# Keep the HTML template
+!web/index.html
+!web/README.md
+!web/.gitkeep
