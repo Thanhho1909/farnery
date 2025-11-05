@@ -45,6 +45,12 @@ func _ready() -> void:
 	print("💰 Tiền ban đầu: ", money)
 	print("📅 Ngày: ", current_day, " - Mùa: ", get_season_name_vi())
 
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("quick_save"):
+		SaveSystem.quick_save()
+	elif event.is_action_pressed("quick_load"):
+		SaveSystem.quick_load()
+
 ## Thêm tiền
 func add_money(amount: int) -> void:
 	money += amount
