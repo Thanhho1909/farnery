@@ -114,18 +114,20 @@ static func _initialize_crop_database() -> void:
 	CROPS["potato"] = potato
 
 func _setup_visuals() -> void:
-	# Create plot mesh (soil)
-	plot_mesh = MeshInstance3D.new()
-	var box_mesh = BoxMesh.new()
-	box_mesh.size = Vector3(1.0, 0.1, 1.0)
-	plot_mesh.mesh = box_mesh
+	# Get plot mesh from scene, or create if doesn't exist
+	plot_mesh = get_node_or_null("MeshInstance3D")
+	if not plot_mesh:
+		plot_mesh = MeshInstance3D.new()
+		var box_mesh = BoxMesh.new()
+		box_mesh.size = Vector3(1.0, 0.1, 1.0)
+		plot_mesh.mesh = box_mesh
 
-	var material = StandardMaterial3D.new()
-	material.albedo_color = Color(0.4, 0.3, 0.2)  # Brown soil
-	plot_mesh.material_override = material
-	add_child(plot_mesh)
+		var material = StandardMaterial3D.new()
+		material.albedo_color = Color(0.4, 0.3, 0.2)  # Brown soil
+		plot_mesh.material_override = material
+		add_child(plot_mesh)
 
-	# Create crop mesh (placeholder)
+	# Create crop mesh (always created dynamically)
 	crop_mesh = MeshInstance3D.new()
 	crop_mesh.visible = false
 	add_child(crop_mesh)

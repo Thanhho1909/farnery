@@ -23,49 +23,58 @@ func _ready() -> void:
 	_setup_raycast()
 
 func _setup_player_visuals() -> void:
-	# Create player mesh (simple capsule)
-	mesh_instance = MeshInstance3D.new()
-	var capsule = CapsuleMesh.new()
-	capsule.radius = 0.3
-	capsule.height = 1.6
-	mesh_instance.mesh = capsule
+	# Get mesh from scene, or create if doesn't exist
+	mesh_instance = get_node_or_null("MeshInstance3D")
+	if not mesh_instance:
+		mesh_instance = MeshInstance3D.new()
+		var capsule = CapsuleMesh.new()
+		capsule.radius = 0.3
+		capsule.height = 1.6
+		mesh_instance.mesh = capsule
 
-	var material = StandardMaterial3D.new()
-	material.albedo_color = Color(0.3, 0.6, 0.9)  # Blue player
-	mesh_instance.material_override = material
-	mesh_instance.position.y = 0.8
-	add_child(mesh_instance)
+		var material = StandardMaterial3D.new()
+		material.albedo_color = Color(0.3, 0.6, 0.9)  # Blue player
+		mesh_instance.material_override = material
+		mesh_instance.position.y = 0.8
+		add_child(mesh_instance)
 
-	# Add collision shape
-	var collision = CollisionShape3D.new()
-	var shape = CapsuleShape3D.new()
-	shape.radius = 0.3
-	shape.height = 1.6
-	collision.shape = shape
-	collision.position.y = 0.8
-	add_child(collision)
+	# Add collision if doesn't exist
+	if not get_node_or_null("CollisionShape3D"):
+		var collision = CollisionShape3D.new()
+		var shape = CapsuleShape3D.new()
+		shape.radius = 0.3
+		shape.height = 1.6
+		collision.shape = shape
+		collision.position.y = 0.8
+		add_child(collision)
 
 	# Set collision layers
 	collision_layer = 2  # Player layer
 	collision_mask = 1 | 16  # Ground and buildings
 
 func _setup_camera() -> void:
-	# Create third-person camera
-	var camera_pivot = Node3D.new()
-	camera_pivot.name = "CameraPivot"
-	add_child(camera_pivot)
+	# Get camera from scene, or create if doesn't exist
+	var camera_pivot = get_node_or_null("CameraPivot")
+	if not camera_pivot:
+		camera_pivot = Node3D.new()
+		camera_pivot.name = "CameraPivot"
+		add_child(camera_pivot)
 
-	camera = Camera3D.new()
-	camera.position = Vector3(0, 8, 10)
-	camera.rotation_degrees = Vector3(-35, 0, 0)
-	camera_pivot.add_child(camera)
+	camera = camera_pivot.get_node_or_null("Camera3D")
+	if not camera:
+		camera = Camera3D.new()
+		camera.position = Vector3(0, 8, 10)
+		camera.rotation_degrees = Vector3(-35, 0, 0)
+		camera_pivot.add_child(camera)
 
 func _setup_raycast() -> void:
-	# Create raycast for interactions
-	interaction_raycast = RayCast3D.new()
-	interaction_raycast.target_position = Vector3(0, -1, -interaction_raycast_distance)
-	interaction_raycast.collision_mask = 1 | 8 | 16 | 32  # Ground, crops, animals, buildings
-	add_child(interaction_raycast)
+	# Get raycast from scene, or create if doesn't exist
+	interaction_raycast = get_node_or_null("RayCast3D")
+	if not interaction_raycast:
+		interaction_raycast = RayCast3D.new()
+		interaction_raycast.target_position = Vector3(0, -1, -interaction_raycast_distance)
+		interaction_raycast.collision_mask = 1 | 8 | 16 | 32  # Ground, crops, animals, buildings
+		add_child(interaction_raycast)
 
 func _physics_process(delta: float) -> void:
 	_handle_movement(delta)
