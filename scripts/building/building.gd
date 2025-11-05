@@ -93,6 +93,7 @@ const BUILDING_DATA = {
 }
 
 func _ready() -> void:
+	add_to_group("buildings")
 	_setup_visuals()
 	_update_visual()
 

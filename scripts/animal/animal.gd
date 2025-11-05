@@ -88,6 +88,7 @@ const ANIMAL_DATA = {
 }
 
 func _ready() -> void:
+	add_to_group("animals")
 	_setup_visuals()
 	if animal_name == "":
 		animal_name = get_animal_type_name()

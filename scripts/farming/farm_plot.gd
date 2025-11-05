@@ -33,6 +33,7 @@ var crop_mesh: MeshInstance3D
 static var CROPS: Dictionary = {}
 
 func _ready() -> void:
+	add_to_group("farm_plots")
 	_setup_visuals()
 	_initialize_crop_database()
 

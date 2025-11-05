@@ -368,14 +368,22 @@ func _get_playtime() -> float:
 	return Time.get_ticks_msec() / 1000.0
 
 func _capture_screenshot() -> String:
-	# Capture viewport as image
-	var img = get_viewport().get_texture().get_image()
+	# Capture viewport as image from root
+	var viewport = get_tree().root.get_viewport()
+	if not viewport:
+		return ""
+
+	var img = viewport.get_texture().get_image()
+	if not img:
+		return ""
 
 	# Resize to thumbnail
 	img.resize(320, 180, Image.INTERPOLATE_LANCZOS)
 
 	# Convert to PNG bytes
 	var png_bytes = img.save_png_to_buffer()
+	if not png_bytes:
+		return ""
 
 	# Encode to base64
 	return Marshalls.raw_to_base64(png_bytes)
@@ -387,18 +395,22 @@ func auto_save() -> void:
 
 ## Quick save (F5)
 func quick_save() -> void:
-	await save_game(0)
-	if get_tree().root.has_node("UI/HUD"):
-		var hud = get_tree().root.get_node("UI/HUD")
-		if hud.has_method("show_notification"):
-			hud.show_notification("💾 Quick saved!", Color(0.5, 1, 0.5))
+	var success = await save_game(0)
+	if success:
+		_show_notification("💾 Quick saved!", Color(0.5, 1, 0.5))
 
 ## Quick load (F9)
 func quick_load() -> void:
 	if load_game(0):
-		if get_tree().root.has_node("UI/HUD"):
-			var hud = get_tree().root.get_node("UI/HUD")
-			if hud.has_method("show_notification"):
-				hud.show_notification("📂 Quick loaded!", Color(0.5, 0.8, 1))
+		_show_notification("📂 Quick loaded!", Color(0.5, 0.8, 1))
 	else:
 		print("⚠️ No quick save found")
+
+## Helper to show notification
+func _show_notification(text: String, color: Color) -> void:
+	# Try to find HUD in scene tree
+	var hud = get_tree().get_first_node_in_group("hud")
+	if hud and hud.has_method("show_notification"):
+		hud.show_notification(text, color)
+	else:
+		print(text)

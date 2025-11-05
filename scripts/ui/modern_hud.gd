@@ -17,6 +17,7 @@ var notification_container: VBoxContainer
 const NOTIFICATION_DURATION = 3.0
 
 func _ready() -> void:
+	add_to_group("hud")
 	_setup_ui()
 	_connect_signals()
 	_update_all()
