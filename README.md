@@ -4,7 +4,22 @@
 
 ![Godot Engine](https://img.shields.io/badge/Godot-4.2-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Status](https://img.shields.io/badge/status-In%20Development-yellow.svg)
+![Status](https://img.shields.io/badge/status-Production%20Ready-brightgreen.svg)
+
+## 🚀 Chơi Ngay Trên Web!
+
+**Game đã sẵn sàng export ra web để chơi trực tiếp trên trình duyệt!**
+
+### Export Nhanh (3 bước):
+1. Mở project trong Godot 4.2+
+2. `Project` > `Export...` > Chọn "Web" > `Export Project`
+3. Chạy: `cd web && python3 -m http.server 8000`
+
+📖 **Hướng dẫn chi tiết**: [HUONG_DAN_XUAT_WEB.md](HUONG_DAN_XUAT_WEB.md)
+⚡ **Hướng dẫn nhanh**: [WEB_EXPORT_QUICK.md](WEB_EXPORT_QUICK.md)
+🤖 **Auto script**: `./export_web.sh`
+
+---
 
 ## 📖 Mô Tả
 
